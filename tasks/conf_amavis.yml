@@ -1,0 +1,46 @@
+---
+# configure clams
+# run freshclam
+# start clamd
+# configure sa?
+#
+
+- name: "[amavis] stop freshclam before configure"
+  service: name=clamav-freshclam state=stopped
+
+- lineinfile:
+  name: "[amavis] configure proxy address for freshclam"
+  dest: /etc/clamav/freshclam.conf
+  regexp: '^HTTPProxyServer'
+  line: "HTTPProxyServer {{freshclam_proxy_server}}"
+  state: present
+  when: freshclam_proxy_server is defined
+
+- lineinfile:
+  name: "[amavis] configure proxy port for freshclam"
+  dest: /etc/clamav/freshclam.conf
+  regexp: '^HTTPProxyPort'
+  line: "HTTPProxyPort {{freshclam_proxy_port}}"
+  state: present
+  when: freshclam_proxy_server is defined
+
+- name: "[amavis] update clam sigs"
+  command: /usr/bin/freshclam
+
+- name: "[amavis] start freshclam"
+  service: name=clamav-freshclam state=started enabled=yes
+
+- name: "[amavis] start clamd"
+  service: name=clamav-daemon state=started enabled=yes
+
+- name: "[amavis] configure 52-ansible"
+  template: src=templates/52-ansible.j2 dest=/etc/amavis/conf.d/52-ansible owner=root group=root mode=0644
+  notify:
+    - reload amavis
+
+- name: "[amavis] configure master.cf"
+  template: src=templates/master.cf.j2 dest=/etc/postfix/master.cf owner=postfix group=postfix mode=0644
+  notify:
+    - reload postfix
+- name: "[amavis] enable service"
+  service: name=postfix state=running enabled=yes

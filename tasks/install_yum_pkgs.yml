@@ -1,0 +1,14 @@
+---
+- name: install spam check packages
+  yum: name={{item}} state=present update_cache=yes
+  with_items:
+    - amavisd-new
+    - clamav-daemon
+    - spamassassin
+    - unrar-free
+    - arj
+    - cabextract
+    - arc
+    - p7zip-full
+    - bzip2
+
