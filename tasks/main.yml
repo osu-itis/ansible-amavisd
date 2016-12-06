@@ -5,4 +5,4 @@
 - include: install_apt_pkgs.yml
   when: ansible_pkg_mgr == 'apt'
 
-- include: conf_postfix.yml
+- include: conf_amavis.yml
