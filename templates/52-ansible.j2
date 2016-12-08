@@ -1,0 +1,42 @@
+use strict;
+
+$mydomain = "{{ amavis.mydomain }}";
+$max_servers = {{ amavis.max_servers }};
+
+# Don't keep stuff, and never tag subject lines
+$QUARANTINEDIR = undef;
+$sa_spam_subject_tag = undef;
+$undecipherable_subject_tag = undef;
+
+mynetworks = qw ( 127.0.0.0/32 [::1] [FE80::]/10 [FEC0::]/10
+{% for net in amavis.mynetworks %}
+    {{ net }}
+{% endfor %}
+);
+
+# TODO: protect scalar values with [ ]?
+$policy_bank{'MYNETS'} = {
+{% for attr,val in amavis.policy_bank_mynets.iteritems() %}
+    ${{ attr }} => {{ val }},
+{% endfor %}
+
+$sa_tag_level_deflt  = {{ amavis.tag_default }};   # add spam info headers if at, or above that level
+$sa_tag2_level_deflt = {{ amavis.tag2_default }};  # add 'spam detected' headers at that level
+$sa_kill_level_deflt = {{ amavis.kill_default }};  # triggers spam evasive actions
+$sa_dsn_cutoff_level = {{ amavis.cutoff_level }};  # spam level beyond which a DSN is not sent
+
+# treat all domains as local.. pretty hacky, should really be a list of domains
+# we accept mail for... but postfix also does that pre-screening for us...
+@local_domains_acl = qw(.);
+
+{% if amavis.enable_clams %}
+@bypass_virus_checks_maps = (
+   \%bypass_virus_checks, \@bypass_virus_checks_acl, \$bypass_virus_checks_re);
+{% endif %}
+
+{% if amavis.enable_sa %}
+@bypass_spam_checks_maps = (
+   \%bypass_spam_checks, \@bypass_spam_checks_acl, \$bypass_spam_checks_re);
+{% endif %}
+
+1;
