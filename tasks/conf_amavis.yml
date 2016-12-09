@@ -9,20 +9,18 @@
   service: name=clamav-freshclam state=stopped
 
 - lineinfile:
-  name: "[amavis] configure proxy address for freshclam"
-  dest: /etc/clamav/freshclam.conf
-  regexp: '^HTTPProxyServer'
-  line: "HTTPProxyServer {{freshclam_proxy_server}}"
-  state: present
-  when: freshclam_proxy_server is defined
+    dest=/etc/clamav/freshclam.conf
+    regexp='^HTTPProxyServer'
+    line="HTTPProxyServer {{amavis.freshclam_proxy_server}}"
+    state=present
+  when: amavis.freshclam_proxy_server is defined
 
 - lineinfile:
-  name: "[amavis] configure proxy port for freshclam"
-  dest: /etc/clamav/freshclam.conf
-  regexp: '^HTTPProxyPort'
-  line: "HTTPProxyPort {{freshclam_proxy_port}}"
-  state: present
-  when: freshclam_proxy_server is defined
+    dest=/etc/clamav/freshclam.conf
+    regexp='^HTTPProxyPort'
+    line="HTTPProxyPort {{amavis.freshclam_proxy_port}}"
+    state=present
+  when: amavis.freshclam_proxy_server is defined
 
 - name: "[amavis] update clam sigs"
   command: /usr/bin/freshclam
@@ -38,9 +36,5 @@
   notify:
     - reload amavis
 
-- name: "[amavis] configure master.cf"
-  template: src=templates/master.cf.j2 dest=/etc/postfix/master.cf owner=postfix group=postfix mode=0644
-  notify:
-    - reload postfix
 - name: "[amavis] enable service"
-  service: name=postfix state=running enabled=yes
+  service: name=amavis state=running enabled=yes
