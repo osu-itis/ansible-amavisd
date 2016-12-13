@@ -8,7 +8,7 @@ $QUARANTINEDIR = undef;
 $sa_spam_subject_tag = undef;
 $undecipherable_subject_tag = undef;
 
-mynetworks = qw ( 127.0.0.0/32 [::1] [FE80::]/10 [FEC0::]/10
+@mynetworks = qw ( 127.0.0.0/32 [::1] [FE80::]/10 [FEC0::]/10
 {% for net in amavis.mynetworks %}
     {{ net }}
 {% endfor %}
@@ -17,8 +17,9 @@ mynetworks = qw ( 127.0.0.0/32 [::1] [FE80::]/10 [FEC0::]/10
 # TODO: protect scalar values with [ ]?
 $policy_bank{'MYNETS'} = {
 {% for attr,val in amavis.policy_bank_mynets.iteritems() %}
-    ${{ attr }} => {{ val }},
+    {{ attr }} => {{ val }},
 {% endfor %}
+};
 
 $sa_tag_level_deflt  = {{ amavis.tag_default }};   # add spam info headers if at, or above that level
 $sa_tag2_level_deflt = {{ amavis.tag2_default }};  # add 'spam detected' headers at that level

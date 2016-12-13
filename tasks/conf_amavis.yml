@@ -31,6 +31,9 @@
 - name: "[amavis] start clamd"
   service: name=clamav-daemon state=started enabled=yes
 
+- name: "set up mailname"
+  template: src=templates/mailname dest=/etc/mailname owner=root group=root mode=644
+
 - name: "[amavis] configure 52-ansible"
   template: src=templates/52-ansible.j2 dest=/etc/amavis/conf.d/52-ansible owner=root group=root mode=0644
   notify:
