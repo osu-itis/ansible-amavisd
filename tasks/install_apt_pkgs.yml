@@ -3,7 +3,7 @@
   apt: name={{item}} state=present update_cache=yes
   with_items:
     - amavisd-new
-    - clamav
+    - clamav-daemon
     - spamassassin
     - unrar-free
     - arj
