@@ -1,9 +1,4 @@
 ---
-# configure clams
-# run freshclam
-# start clamd
-# configure sa?
-#
 
 - name: "[amavis] stop freshclam before configure"
   service: name=clamav-freshclam state=stopped
@@ -21,6 +16,18 @@
     line="HTTPProxyPort {{amavis.freshclam_proxy_port}}"
     state=present
   when: amavis.freshclam_proxy_server is defined
+
+- lineinfile:
+    dest=/etc/clamav/clamd.conf
+    regexp='^AllowSupplementaryGroups'
+    line='AllowSupplementaryGroups true'
+    state=present
+
+- name: "[amavis] add clamav to amavis group"
+  user: name=clamav groups=amavis append=yes
+
+- name: "[amavis] add amavis to clamav group"
+  user: name=amavis groups=clamav append=yes
 
 - name: "[amavis] update clam sigs"
   command: /usr/bin/freshclam
