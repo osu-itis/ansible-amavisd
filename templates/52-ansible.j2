@@ -21,6 +21,7 @@ $policy_bank{'MYNETS'} = {
 {% endfor %}
 };
 
+$remove_existing_spam_headers = {{ amavis.remove_existing_spam_headers | default('1') }};
 $sa_tag_level_deflt  = {{ amavis.tag_default }};   # add spam info headers if at, or above that level
 $sa_tag2_level_deflt = {{ amavis.tag2_default }};  # add 'spam detected' headers at that level
 $sa_kill_level_deflt = {{ amavis.kill_default }};  # triggers spam evasive actions
