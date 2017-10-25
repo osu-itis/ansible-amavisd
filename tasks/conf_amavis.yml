@@ -45,6 +45,8 @@
   template: src=templates/52-ansible.j2 dest=/etc/amavis/conf.d/52-ansible owner=root group=root mode=0644
   notify:
     - reload amavis
+  tags:
+    - config
 
 - name: "[amavis] enable service"
   service: name=amavis state=running enabled=yes
