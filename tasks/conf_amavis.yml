@@ -49,4 +49,4 @@
     - config
 
 - name: "[amavis] enable service"
-  service: name=amavis state=running enabled=yes
+  service: name=amavis state=started enabled=yes
