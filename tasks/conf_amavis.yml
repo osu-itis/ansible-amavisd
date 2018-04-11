@@ -23,6 +23,11 @@
     line='AllowSupplementaryGroups true'
     state=present
 
+- lineinfile:
+    dest=/etc/spamassassin/local.cf
+    line='use_bayes 0'
+    state=present
+
 - name: "[amavis] add clamav to amavis group"
   user: name=clamav groups=amavis append=yes
 
