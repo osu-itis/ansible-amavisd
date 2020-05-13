@@ -28,6 +28,11 @@
     line='use_bayes 0'
     state=present
 
+- lineinfile:
+    dest=/etc/spamassassin/local.cf
+    line='bayes_auto_learn 0'
+    state=present
+
 - name: "[amavis] add clamav to amavis group"
   user: name=clamav groups=amavis append=yes
 
