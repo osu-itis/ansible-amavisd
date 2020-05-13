@@ -62,7 +62,7 @@
     - config
 
 - name: "copy Spamhaus files"
-  copy: src=files/{{item}} dest=/etc/spamhaus/{{item}} owner=root group=root
+  copy: src=files/{{item}} dest=/etc/spamassassin/{{item}} owner=root group=root
   with_items:
     - SH.pm
     - sh_scores.cf
