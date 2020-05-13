@@ -55,9 +55,19 @@
 
 - name: "[amavis] add SH DQS key"
   template: src=templates/sh.cf.j2 dest=/etc/spamassassin/sh.cf owner=root group=root mode=0644
-  when: amavis.enable_dqs is true
+  when: amavis.enable_dqs|bool
   notify:
     - reload amavis
+  tags:
+    - config
+
+- name: "copy Spamhaus files"
+  copy: src=files/acl/{{item}} dest=/etc/spamhaus/{{item}} owner=root group=root
+  with_items:
+    - SH.pm
+    - sh_scores.cf
+    - sh.pre
+  when: amavis.enable_dqs|bool
   tags:
     - config
 
