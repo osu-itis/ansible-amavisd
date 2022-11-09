@@ -1,14 +1,7 @@
 ---
 - name: install spam check packages
-  apt: name={{item}} state=present update_cache=yes
-  with_items:
-    - amavisd-new
-    - clamav-daemon
-    - spamassassin
-    - unrar-free
-    - arj
-    - cabextract
-    - arc
-    - p7zip-full
-    - bzip2
+  apt:
+    name: ['amavisd-new', 'clamav-daemon', 'spamassassin', 'unrar-free', 'arj', 'cabextract', 'arc', 'p7zip-full', 'bzip2']
+    state: present
+    update_cache: yes
 
